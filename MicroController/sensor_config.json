@@ -1,0 +1,5 @@
+{
+  "DISCOVERY_CHANNEL": "main",
+  "SENSOR_DATA_TOPIC": "water_sensor_channel",
+  "DEVICE_ID": "water_sensor"
+}
