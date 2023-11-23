@@ -12,7 +12,7 @@ import time
 if __name__ == "__main__":
     ntptime.settime()
     print("connecting client to broker")
-    client = MQTTClientManager()
+    client = MQTTClientManager("Water Sensor")
     while True:
         data = sensor.read_sensor()
         client.publish_sensor_data(data)
