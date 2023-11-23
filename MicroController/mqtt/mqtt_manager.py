@@ -16,7 +16,7 @@ import ubinascii
 class MQTTClientManager:
     def __init__(self, config_file="mqtt/mqtt_config.json"):
         self.client = None
-        self.device_id = ubinascii.hexlify(machine.unique_id())
+        self.device_id = ubinascii.hexlify(machine.unique_id()).decode('utf-8')
         self.broker_address = ""
         self.broker_port = 0
         self.load_mqtt_config(config_file)
@@ -46,7 +46,6 @@ class MQTTClientManager:
 
     def send_device_info_to_discovery(self):
         payload = self.create_payload(SENSOR_DISCOVERY)
-        self.client.subscribe("discovery")
         self.client.publish(topic="discovery", msg=payload)
 
     def mqtt_callback(self, topic, msg):
@@ -61,6 +60,11 @@ class MQTTClientManager:
                 "data": data,
             }
         )
+
+    def publish_sensor_data(self, value):
+        payload = self.create_payload(msg_type=SENSOR_DATA, data=value)
+        print(self.device_id)
+        self.client.publish(f"{self.device_id}/data", payload)
 
     def iso_time(self):
         year, month, day, hour, minute, second, _, _ = time.localtime()
