@@ -4,13 +4,12 @@
 # Consistent Naming Convention: Use a consistent and descriptive naming convention for topics to avoid confusion.
 
 from mqtt.mqtt_manager import MQTTClientManager
-
+import ntptime
 
 
 
 if __name__ == "__main__":
-    print("we made it to main")
-    
+    ntptime.settime()
+    print("connecting client to broker")
     client = MQTTClientManager()
-    client.connect_to_broker()
-    
+
