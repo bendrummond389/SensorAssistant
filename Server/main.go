@@ -1,6 +1,8 @@
 package main
 
 import (
+	"log"
+
 	"github.com/bendrummond389/SensorAssistant/Server/mqtt"
 	mqttPaho "github.com/eclipse/paho.mqtt.golang"
 	// other imports
@@ -13,7 +15,7 @@ func main() {
 
 	client := mqttPaho.NewClient(opts)
 	if token := client.Connect(); token.Wait() && token.Error() != nil {
-			// handle error
+			log.Printf("Error connecting to ")
 	}
 
 	topic := "discovery"

@@ -9,3 +9,4 @@ def read_sensor():
     except Exception as e:
         print(f"Exception in read_sensor: {e}")
         return None
+    

@@ -15,11 +15,16 @@ const (
 	SensorData              = 4
 )
 
-type Message struct {
+type SensorInfo struct {
+	SensorName string `json:"sensor_name"`
+	Units      string `json:"units"`
+}
+
+type DiscoveryMessage struct {
 	Type      int    `json:"type"`
 	DeviceID  string `json:"device_id"`
 	Timestamp string `json:"timestamp"`
-	Data      interface{} `json:"data"`
+	Data      SensorInfo `json:"data"`
 }
 
 
@@ -40,23 +45,21 @@ func NewListenerManager(client mqtt.Client, discoveryTopic string) *ListenerMana
 }
 
 func (m *ListenerManager) discoveryHandler(client mqtt.Client, msg mqtt.Message) {
-	var message Message
-	if err := json.Unmarshal(msg.Payload(), &message); err != nil {
+	var discoveryMsg DiscoveryMessage
+	if err := json.Unmarshal(msg.Payload(), &discoveryMsg); err != nil {
 		log.Printf("Error unmarshaling discovery message: %v", err)
 		return
 	}
 
-	if message.Type == SensorDiscovery {
-		sensorID := message.DeviceID
+	if discoveryMsg.Type == SensorDiscovery {
+		sensorID := discoveryMsg.DeviceID
 		sensorTopic := sensorID + "/data"
 		if _, exists := m.listeners[sensorID]; !exists {
-			m.listeners[sensorID] = NewListener(m.client, sensorTopic)
+			m.listeners[sensorID] = NewListener(m.client, sensorTopic, discoveryMsg.Data.SensorName, discoveryMsg.Data.Units)
 			m.listeners[sensorID].Start()
-			log.Printf("Listener started for topic: %s", sensorID)
+			log.Printf("Listener started for sensor ID %s with name %s and units %s", sensorID, discoveryMsg.Data.SensorName, discoveryMsg.Data.Units)
 		}
 	}
-
-
 }
 
 func (m *ListenerManager) Start() {

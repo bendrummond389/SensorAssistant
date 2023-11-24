@@ -10,12 +10,16 @@ import (
 type Listener struct {
 	client mqtt.Client
 	topic string
+	SensorType string
+	Units string
 }
 
-func NewListener(client mqtt.Client, topic string) *Listener {
+func NewListener(client mqtt.Client, topic string, sensorType, units string) *Listener {
 	return &Listener{
 		client: client,
 		topic: topic,
+		SensorType: sensorType,
+		Units: units,
 	}
 }
 
@@ -26,6 +30,7 @@ func (l *Listener) messageHandler(client mqtt.Client, msg mqtt.Message) {
 	if err := json.Unmarshal(msg.Payload(), &data); err != nil {
 		log.Printf("Error unmarshaling message: %v", err)
 	}
+
 }
 
 func (l *Listener) Start() {

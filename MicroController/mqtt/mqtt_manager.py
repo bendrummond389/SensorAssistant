@@ -14,10 +14,11 @@ import ubinascii
 
 
 class MQTTClientManager:
-    def __init__(self, name, config_file="mqtt/mqtt_config.json"):
+    def __init__(self, name, units, config_file="mqtt/mqtt_config.json"):
         self.client = None
         self.name = name
-        self.device_id = ubinascii.hexlify(machine.unique_id()).decode('utf-8')
+        self.units = units
+        self.device_id = ubinascii.hexlify(machine.unique_id()).decode("utf-8")
         self.broker_address = ""
         self.broker_port = 0
         self.load_mqtt_config(config_file)
@@ -47,7 +48,11 @@ class MQTTClientManager:
 
     def send_device_info_to_discovery(self):
         try:
-            payload = self.create_payload(SENSOR_DISCOVERY)
+            sensor_info = {
+                "sensor_name": self.name,
+                "units": self.units,
+            }
+            payload = self.create_payload(SENSOR_DISCOVERY, data=sensor_info)
             self.client.publish(topic="discovery", msg=payload)
         except Exception as e:
             print(f"Exception while sending device info to the discovery: {e}")
