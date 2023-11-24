@@ -71,8 +71,8 @@ class MQTTClientManager:
         )
 
     def publish_sensor_data(self, value):
-        payload = self.create_payload(msg_type=SENSOR_DATA, data=value)
-        print(self.device_id)
+        sensor_data = {"value": value}
+        payload = self.create_payload(msg_type=SENSOR_DATA, data=sensor_data)
         self.client.publish(f"{self.device_id}/data", payload)
 
     def iso_timestamp(self):
