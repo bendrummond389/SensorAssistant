@@ -2,7 +2,7 @@ package main
 
 import (
 	"log"
-
+	"time"
 	"github.com/bendrummond389/SensorAssistant/Server/mqtt"
 	mqttPaho "github.com/eclipse/paho.mqtt.golang"
 	// other imports
@@ -22,6 +22,13 @@ func main() {
 	manager := mqtt.NewListenerManager(client, topic)
 	manager.Start()
 
-	// Keep the main program running
+	ticker := time.NewTicker(10 * time.Second)
+	go func() {
+		for range ticker.C {
+			currentValues := manager.GetCurrentValues()
+			log.Println("Current Sensor Values:", currentValues)
+		}
+	}()
+
 	select {}
 }
