@@ -1,4 +1,4 @@
-# Sensor Network Framework
+# Sensor Assistant
 
 ## Overview
 
