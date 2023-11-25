@@ -30,6 +30,13 @@ type DiscoveryMessage struct {
 	Data      SensorInfo `json:"data"`      // Sensor information
 }
 
+type SensorStatus struct {
+	SensorID   string `json:"sensor_id"`
+	SensorName string `json:"sensor_name"`
+	Units      string `json:"units"`
+	Value      int    `json:"value"`
+}
+
 // ListenerManager manages a set of MQTT listeners for different sensors.
 type ListenerManager struct {
 	client         mqtt.Client          // MQTT client for communication
@@ -67,12 +74,20 @@ func (m *ListenerManager) discoveryHandler(client mqtt.Client, msg mqtt.Message)
 }
 
 // GetCurrentValues retrieves the current values from all listeners.
-func (m *ListenerManager) GetCurrentValues() map[string]int {
-	currentValues := make(map[string]int)
-	for sensorID, listener := range m.listeners {
-		currentValues[sensorID] = listener.GetCurrentValue()
+func (m *ListenerManager) GetCurrentValues() []SensorStatus {
+	var sensorStatusList []SensorStatus
+
+	for sensorId, listener := range m.listeners {
+		sensorStatus := SensorStatus{
+			SensorID:   sensorId,
+			SensorName: listener.SensorName,
+			Units:      listener.Units,
+			Value:      listener.GetCurrentValue(),
+		}
+		sensorStatusList = append(sensorStatusList, sensorStatus)
+
 	}
-	return currentValues
+	return sensorStatusList
 }
 
 // Start begins the listening process on the discovery topic.

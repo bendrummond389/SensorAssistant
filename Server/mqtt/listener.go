@@ -11,7 +11,7 @@ import (
 type Listener struct {
 	client       mqtt.Client // MQTT client for communication
 	topic        string      // MQTT topic the listener is subscribed to
-	SensorType   string      // Type of sensor the listener is associated with
+	SensorName   string      // Type of sensor the listener is associated with
 	Units        string      // Measurement units for sensor data
 	currentValue int         // Most recent value received from the sensor
 }
@@ -30,11 +30,11 @@ type SensorValue struct {
 }
 
 // NewListener creates a new Listener instance.
-func NewListener(client mqtt.Client, topic string, sensorType, units string) *Listener {
+func NewListener(client mqtt.Client, topic string, sensorName, units string) *Listener {
 	return &Listener{
 		client:       client,
 		topic:        topic,
-		SensorType:   sensorType,
+		SensorName:   sensorName,
 		Units:        units,
 		currentValue: 0,
 	}
