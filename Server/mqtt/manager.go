@@ -3,6 +3,7 @@ package mqtt
 import (
 	"encoding/json"
 	"log"
+	"time"
 
 	mqtt "github.com/eclipse/paho.mqtt.golang"
 )
@@ -43,6 +44,9 @@ type ListenerManager struct {
 	listeners      map[string]*Listener // Map to hold listener instances indexed by device ID
 	discoveryTopic string               // MQTT topic to listen to for sensor discovery
 }
+
+// A time constant used by the RemoveInactiveListeners method
+const ListenerTimeout = time.Second * 30
 
 // NewListenerManager creates and returns a new ListenerManager instance.
 func NewListenerManager(client mqtt.Client, discoveryTopic string) *ListenerManager {
@@ -96,5 +100,14 @@ func (m *ListenerManager) Start() {
 		log.Printf("Failed to subscribe to discovery topic %s: %v", m.discoveryTopic, token.Error())
 	} else {
 		log.Printf("Subscribed to discovery topic %s", m.discoveryTopic)
+	}
+}
+
+func (m *ListenerManager) RemoveInactiveListeners() {
+	for sensorID, listener := range m.listeners {
+		if time.Since(listener.lastMessageTime) > ListenerTimeout {
+			log.Printf("Removing inactive listener for sensor ID: %s", sensorID)
+			delete(m.listeners, sensorID)
+		}
 	}
 }

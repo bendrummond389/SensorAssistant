@@ -1,12 +1,14 @@
-from machine import ADC, Pin
+import dht
+import machine
+
 
 def read_sensor():
     try:
-        adc = ADC(Pin(36))  # Connecting to GPIO36 (also known as ADC0)
-        val = adc.read()
+        d = dht.DHT11(machine.Pin(2))
+        d.measure()
+        val = d.temperature()
         print(f"Sensor read successfully: {val}")
         return val
     except Exception as e:
         print(f"Exception in read_sensor: {e}")
         return None
-    

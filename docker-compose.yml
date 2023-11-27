@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  mqtt-broker:
+    build:
+      context: ./Broker
+      dockerfile: Dockerfile.mqtt
+    ports:
+      - '1883:1883'
+    volumes:
+      - ./Broker/mosquitto.conf:/mosquitto/config/mosquitto.conf
+
+  go-server:
+    build:
+      context: ./Server
+      dockerfile: Dockerfile.server
+    depends_on:
+      - mqtt-broker
+    environment:
+      - MQTT_BROKER_ADDRESS=mqtt-broker:1883
+    ports:
+      - '8080:8080'
+
+  frontend:
+    build:
+      context: ./Frontend
+      dockerfile: Dockerfile.frontend
+    ports:
+      - '3000:3000'
+    environment:
+      - NEXT_PUBLIC_WEBSOCKET_SERVER_URL=ws://go-server:8080/ws

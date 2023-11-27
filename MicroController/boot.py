@@ -47,7 +47,7 @@ def connect_wifi():
                     break  # Break the loop if connected
                 time.sleep(1)  # Sleep for a second between checks
 
-        retries -= 1  # Decrement the retry counter
+        retries -= 5  # Decrement the retry counter
 
         # Print the connection status
         if wlan.isconnected():

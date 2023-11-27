@@ -3,17 +3,19 @@ package mqtt
 import (
 	"encoding/json"
 	"log"
+	"time"
 
 	mqtt "github.com/eclipse/paho.mqtt.golang"
 )
 
 // Listener represents an MQTT subscriber listening to a specific topic.
 type Listener struct {
-	client       mqtt.Client // MQTT client for communication
-	topic        string      // MQTT topic the listener is subscribed to
-	SensorName   string      // Type of sensor the listener is associated with
-	Units        string      // Measurement units for sensor data
-	currentValue int         // Most recent value received from the sensor
+	client          mqtt.Client // MQTT client for communication
+	topic           string      // MQTT topic the listener is subscribed to
+	SensorName      string      // Type of sensor the listener is associated with
+	Units           string      // Measurement units for sensor data
+	currentValue    int         // Most recent value received from the sensor
+	lastMessageTime time.Time   // The timestamp of the last sensor data transmission
 }
 
 // SensorMessage defines the structure of a message from a sensor.
@@ -48,6 +50,7 @@ func (l *Listener) GetCurrentValue() int {
 // messageHandler handles incoming MQTT messages on the subscribed topic.
 func (l *Listener) messageHandler(client mqtt.Client, msg mqtt.Message) {
 	log.Printf("Received message on topic %s: %s", msg.Topic(), string(msg.Payload()))
+	l.lastMessageTime = time.Now()
 
 	var sensorMsg SensorMessage
 	if err := json.Unmarshal(msg.Payload(), &sensorMsg); err != nil {
