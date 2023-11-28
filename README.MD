@@ -23,13 +23,13 @@ This project provides a framework to create a personal network of sensors, coupl
 1. Clone the repository:
 
    ```bash
-   git clone https://github.com/yourusername/sensornetworkframework.git
+   git clone https://github.com/bendrummond389/SensorAssistant.git
    ```
 
 2. Navigate to the project directory:
 
    ```bash
-   cd sensornetworkframework
+   cd SensorAssistant
    ```
 
 ### Configuration
