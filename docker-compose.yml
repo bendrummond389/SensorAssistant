@@ -23,8 +23,8 @@ services:
 
   frontend:
     build:
-      context: ./Frontend
-      dockerfile: Dockerfile.frontend
+      context: ./Client
+      dockerfile: Dockerfile.client
     ports:
       - '3000:3000'
     environment:

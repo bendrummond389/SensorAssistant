@@ -41,26 +41,26 @@ This project provides a framework to create a personal network of sensors, coupl
 
 ### Running the Application
 
-The application currently requires a few steps to run, which will be automated in the future.
+The application currently requires a few steps to run. To simplify the process the MQTT broker, go server and nextjs frontend have been containerized and can be built and deployed with 2 commands.
 
 1. **Deploy MicroPython to Your Microcontroller**:
+
    - Use pymaker for easy file flashing to the device. Once deployed, the code runs on startup, so no further configuration is needed.
 
-2. **Start the Go Server**:
+2. **Build the Docker image**:
+
    - From the project root, run:
 
      ```bash
-     cd Server
-     go run main.go
+      docker-compose build
      ```
 
-3. **Start the Frontend**:
+3. **Start the docker image**:
+
    - From the project root, run:
 
      ```bash
-     cd frontend
-     yarn run build
-     yarn run start
+      docker compose up
      ```
 
 ## Usage
